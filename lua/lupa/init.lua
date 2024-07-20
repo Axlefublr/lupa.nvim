@@ -53,11 +53,13 @@ end
 ---@param backwards boolean?
 ---@param search_offset string? without the leading / or ?
 ---@param edit boolean? don't *make* the search, let the user edit it first (by not sending enter)
+---@param not_inside boolean? don't match the pattern if it's inside another word (by prepending \< to the search pattern and appending it with \>)
 ---@param opts table containing any of the parameters specified above.
 function m.register(register, opts)
 	opts = opts or {}
 	local register = vim.fn.getreg(register)
 	local pattern = m.escape_for_search(register)
+	if opts.not_inside then pattern = '\\<' .. pattern .. '\\>' end
 	local searcher = get_searcher_key(opts.backwards)
 	local search_offset = get_search_offset(opts.search_offset, searcher)
 	m.feedkeys(searcher .. pattern .. search_offset)
