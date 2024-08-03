@@ -48,13 +48,15 @@ local function get_actual_default_register()
 	end
 end
 
+---@class LupaSearchOpts
+---@field backwards boolean?
+---@field search_offset string? without the leading / or ?
+---@field edit boolean? don't *make* the search, let the user edit it first (by not sending enter)
+---@field not_inside boolean? don't match the pattern if it's inside another word (by prepending \< to the search pattern and appending it with \>)
+
 --- Make a search for the contents of a vim register.
 ---@param register string
----@param backwards boolean?
----@param search_offset string? without the leading / or ?
----@param edit boolean? don't *make* the search, let the user edit it first (by not sending enter)
----@param not_inside boolean? don't match the pattern if it's inside another word (by prepending \< to the search pattern and appending it with \>)
----@param opts table containing any of the parameters specified above.
+---@param opts LupaSearchOpts? containing any of the parameters specified above.
 function m.register(register, opts)
 	opts = opts or {}
 	local register = vim.fn.getreg(register)
@@ -68,11 +70,7 @@ end
 
 --- Make a search for your visual selection.
 --- Expects you to be in visual mode
----@param backwards boolean?
----@param search_offset string? without the leading / or ?
----@param edit boolean? don't *make* the search, let the user edit it first (by not sending enter)
----@param not_inside boolean? don't match the pattern if it's inside another word (by prepending \< to the search pattern and appending it with \>)
----@param opts table containing any of the parameters specified above.
+---@param opts LupaSearchOpts? containing any of the parameters specified above.
 function m.selection(opts)
 	opts = opts or {}
 	local actual_default_register = get_actual_default_register()
@@ -93,11 +91,7 @@ function m.selection(opts)
 end
 
 --- Make a search for the word closest to your cursor.
----@param backwards boolean?
----@param search_offset string? without the leading / or ?
----@param edit boolean? don't *make* the search, let the user edit it first (by not sending enter)
----@param not_inside boolean? don't match the pattern if it's inside another word (by prepending \< to the search pattern and appending it with \>)
----@param opts table containing any of the parameters specified above.
+---@param opts LupaSearchOpts? containing any of the parameters specified above.
 function m.word(opts)
 	opts = opts or {}
 	local searcher = get_searcher_key(opts.backwards)
